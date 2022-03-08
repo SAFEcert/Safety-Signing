@@ -133,7 +133,12 @@ class Crons:
         }
         requestURL = API_URL + "/autoSign"
         # future = self._loop.run_in_executor(None, requests.post, requestURL, data=json.dumps(requestBody), headers=requestHeaders)
-        response = await self.token._hass.async_add_executor_job(lambda: requests.post(requestURL, data=json.dumps(requestBody), headers=requestHeaders))
+        try:
+            response = await self.token._hass.async_add_executor_job(lambda: requests.post(requestURL, data=json.dumps(requestBody), headers=requestHeaders))
+        except:
+            """"""
+            self._enable = "off"
+            response = False
         # response = asyncio.run_coroutine_threadsafe(
         #     requests.post(requestURL, data=json.dumps(requestBody), headers=requestHeaders), 1
         # ).result()
