@@ -48,7 +48,7 @@ async def validate_input(hass: HomeAssistant, data: dict) -> dict[str, Any]:
 
     if len(data["api_ip_address"].split(".")) == 4:
         for mask in data["api_ip_address"].split("."):
-            if not mask.isnumeric() or (mask.isnumeric() and (mask < 0 or mask > 255)):
+            if not mask.isnumeric() or (mask.isnumeric() and (int(mask) < 0 or int(mask) > 255)):
                 raise InvalidIPAddress
     else:
         raise InvalidIPAddress
@@ -79,7 +79,7 @@ async def validate_input(hass: HomeAssistant, data: dict) -> dict[str, Any]:
         raise InvalidPin
 
     try:
-        access_token = json.loads(input_config["access_token"])
+        access_token = input_config["access_token"]
         if access_token["access_token"] and access_token["expires_in"] and access_token["refresh_token"] and access_token["scope"] and access_token["token_type"]:
             """This token is good"""
     except:
