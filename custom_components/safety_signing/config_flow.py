@@ -48,7 +48,7 @@ async def validate_input(hass: HomeAssistant, data: dict) -> dict[str, Any]:
 
     if len(data["api_ip_address"].split(".")) == 4:
         for mask in data["api_ip_address"].split("."):
-            if not mask.isnumeric() or mask < 0 or mask > 255:
+            if not mask.isnumeric() or (mask.isnumeric() and (mask < 0 or mask > 255)):
                 raise InvalidIPAddress
     else:
         raise InvalidIPAddress
