@@ -32,7 +32,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
 
     new_devices = []
     for cron in token.crons:
-        new_devices.append(HelloWorldCover(hass, cron))
+        new_devices.append(CronJobRunner(hass, cron))
     if new_devices:
         async_add_entities(new_devices)
 
@@ -40,7 +40,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
 # This entire class could be written to extend a base class to ensure common attributes
 # are kept identical/in sync. It's broken apart here between the Cover and Sensors to
 # be explicit about what is returned, and the comments outline where the overlap is.
-class HelloWorldCover(LightEntity):
+class CronJobRunner(LightEntity):
     """Representation of a dummy Cover."""
 
     def __init__(self, hass, cron) -> None:
