@@ -24,7 +24,7 @@ class Token:
         self._api_ip_address = api_ip_address
         self._token_serial = token_serial
         self._serial_number = serial_number
-        self._access_token = json.loads(access_token)
+        self._access_token = access_token
         self._pin = pin
         self._app = app
         self._hass = hass
