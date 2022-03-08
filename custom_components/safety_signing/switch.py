@@ -88,6 +88,11 @@ class SimpleSwitch(SwitchEntity, RestoreEntity):
             await self.async_turn_on()
         else:
             await self.async_turn_off()
+        self._cron.register_callback(self.async_write_ha_state)
+
+    async def async_will_remove_from_hass(self) -> None:
+        """Entity being removed from hass."""
+        self._cron.remove_callback(self.async_write_ha_state)
 
     async def async_turn_on(self, **kwargs) -> None:
         """Turn on adaptive lighting sleep mode."""
@@ -98,6 +103,23 @@ class SimpleSwitch(SwitchEntity, RestoreEntity):
         """Turn off adaptive lighting sleep mode."""
         await self._cron.turn_off_cron()
         self._state = False
+
+    @property
+    def device_info(self) -> DeviceInfo:
+        """Information about this entity/device."""
+        return {
+            "identifiers": {(DOMAIN, self._cron.cron_id)},
+            # If desired, the name for the device could be different to the entity
+            "name": self.name,
+            "sw_version": self._cron.firmware_version,
+            "model": self._cron.model,
+            "manufacturer": self._cron.token.manufacturer,
+        }
+
+    @property
+    def available(self) -> bool:
+        """Return True if cron and token is available."""
+        return self._cron.online and self._cron.token.online
 
 
 # This entire class could be written to extend a base class to ensure common attributes
