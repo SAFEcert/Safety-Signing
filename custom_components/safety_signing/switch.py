@@ -53,20 +53,20 @@ class SimpleSwitch(SwitchEntity, RestoreEntity):
         self._hass = hass
         self._cron = cron
         self._icon = "mdi:skip-next-circle"
-        self._unique_id = f"{self._cron.cron_id}_cron"
-        self._name = f"{self._cron.name} cron"
-        self._initial_state = True
-        self._state = None
+        self._attr_unique_id = f"{self._cron.cron_id}_cron"
+        self._attr_name = f"{self._cron.name} cron"
+        self._attr_initial_state = True
+        self._attr_state = None
 
     @property
     def name(self):
         """Return the name of the device if any."""
-        return self._name
+        return self._attr_name
 
     @property
     def unique_id(self):
         """Return the unique ID of entity."""
-        return self._unique_id
+        return self._attr_unique_id
 
     @property
     def icon(self) -> str:
@@ -76,13 +76,13 @@ class SimpleSwitch(SwitchEntity, RestoreEntity):
     @property
     def is_on(self) -> Optional[bool]:
         """Return true if adaptive lighting is on."""
-        return self._state
+        return self._attr_state
 
     async def async_added_to_hass(self) -> None:
         """Call when entity about to be added to hass."""
         last_state = await self.async_get_last_state()
-        _LOGGER.debug("%s: last state is %s", self._name, last_state)
-        if (last_state is None and self._initial_state) or (
+        _LOGGER.debug("%s: last state is %s", self._attr_name, last_state)
+        if (last_state is None and self._attr_initial_state) or (
             last_state is not None and last_state.state == STATE_ON
         ):
             await self.async_turn_on()
@@ -97,15 +97,15 @@ class SimpleSwitch(SwitchEntity, RestoreEntity):
     async def async_turn_on(self, **kwargs) -> None:
         """Turn on adaptive lighting sleep mode."""
         await self._cron.running_cron()
-        self._state = True
+        self._attr_state = True
 
     async def async_turn_off(self, **kwargs) -> None:
         """Turn off adaptive lighting sleep mode."""
         await self._cron.turn_off_cron()
-        self._state = False
+        self._attr_state = False
 
     @property
-    def device_info(self) -> DeviceInfo:
+    def device_info(self):
         """Information about this entity/device."""
         return {
             "identifiers": {(DOMAIN, self._cron.cron_id)},
