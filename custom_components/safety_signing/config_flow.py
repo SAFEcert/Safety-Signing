@@ -54,15 +54,13 @@ async def validate_input(hass: HomeAssistant, data: dict) -> dict[str, Any]:
         raise InvalidIPAddress
 
     try:
-        input_config = json.loads(data["config"])
+        input_config = json.loads(data["json_config"])
         input_config["token_serial"]
         input_config["serial_number"]
         input_config["pin"]
         input_config["access_token"]
         input_config["app"]
-        _LOGGER.exception(input_config)
     except:
-        _LOGGER.exception("error")
         raise InvalidAccessToken
     
     # Required("token_serial"): str,
@@ -72,15 +70,12 @@ async def validate_input(hass: HomeAssistant, data: dict) -> dict[str, Any]:
     # Required("app"): str
     
     if len(input_config["token_serial"]) < 5 or len(input_config["serial_number"]) < 5:
-        _LOGGER.exception("error 1")
         raise InvalidSerialNumber
     
     if len(input_config["token_serial"]) < 5:
-        _LOGGER.exception("error 2")
         raise InvalidTokenSerial
 
     if len(input_config["pin"]) < 6 or len(input_config["pin"]) > 9:
-        _LOGGER.exception("error 3")
         raise InvalidPin
 
     try:
@@ -88,21 +83,18 @@ async def validate_input(hass: HomeAssistant, data: dict) -> dict[str, Any]:
         if access_token["access_token"] and access_token["expires_in"] and access_token["refresh_token"] and access_token["scope"] and access_token["token_type"]:
             """This token is good"""
     except:
-        _LOGGER.exception("error 4")
         raise InvalidAccessToken
 
     if len(input_config["app"]) >= 1:
         app_list = input_config["app"].split(';')
         for app in app_list:
             if app not in ["XHDO", "BHXH", "THUE", "KHAC"]:
-                _LOGGER.exception("error 5")
                 raise InvalidApp
 
 
-    token = Token(hass, data["name"], input_config["token_serial"], input_config["serial_number"], input_config["access_token"], input_config["pin"], input_config["app"])
+    token = Token(hass, data["name"], data["api_ip_address"], input_config["token_serial"], input_config["serial_number"], input_config["access_token"], input_config["pin"], input_config["app"])
     # The dummy token provides a `test_connection` method to ensure it's working
     # as expected
-    _LOGGER.exception("error 6")
 
     # result = await token.test_connection()
     # if not result:
