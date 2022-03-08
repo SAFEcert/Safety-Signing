@@ -50,7 +50,7 @@ class Token:
 class Crons:
     """Dummy cron (device for HA) for Hello World example."""
 
-    def __init__(self, cronid: str, name: str, token: token) -> None:
+    def __init__(self, cronid: str, name: str, token: Token) -> None:
         """Init dummy cron."""
         self._id = cronid
         self.token = token
