@@ -57,8 +57,8 @@ class Crons:
         self._id = cronid
         self.token = token
         self.name = name
-        self.token_serial = token._token_serial
-        self.serial_number = token._serial_number
+        self.token_serial = token._token_serial.upper()
+        self.serial_number = token._serial_number.upper()
         self.access_token = token._access_token
         self.pin = token._pin
         self.app = token._app
