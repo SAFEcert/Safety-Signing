@@ -85,7 +85,7 @@ async def validate_input(hass: HomeAssistant, data: dict) -> dict[str, Any]:
     except:
         raise InvalidAccessToken
 
-    if len(input_config["app"]) > 1:
+    if len(input_config["app"]) >= 1:
         app_list = input_config["app"].split(';')
         for app in app_list:
             if app not in ["XHDO", "BHXH", "THUE", "KHAC"]:
@@ -139,6 +139,8 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 errors["name"] = "invalid_name"
             except InvalidConfig:
                 errors["config"] = "invalid_config"
+            except InvalidIPAddress:
+                errors["api_ip_address"] = "invalid_ip_address"
             except InvalidTokenSerial:
                 errors["config"] = "invalid_token_serial"
             except InvalidSerialNumber:

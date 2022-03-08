@@ -12,6 +12,7 @@
             "invalid_access_token": "Invalid access token must be json object",
             "invalid_pin": "Invalid pin length must be > 6 and < 8",
             "invalid_app": "App must be in XHDO,BHXH,THUE,KHAC and and separated by ';'",
+            "invalid_ip_address": "Invalid API ip address",
             "unknown": "unknown error"
         },
         "step": {
@@ -19,7 +20,7 @@
                 "data": {
                     "name": "Name",
                     "json_config": "JSON config",
-                    "api_ip_address": "Google access token (JSON)",
+                    "api_ip_address": "API ip address",
                     "serial_number": "Serial Number",
                     "pin": "Pin code",
                     "app": "App (XHDO;THUE;BHXH)"
