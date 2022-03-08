@@ -21,7 +21,6 @@ class Token:
     def __init__(self, hass: HomeAssistant, name: str, token_serial: str, serial_number: str, access_token: str, pin: str, app: str) -> None:
         """Init dummy token."""
         self._name = name
-        self._api_ip_address = "192.168.11.66"
         self._token_serial = token_serial
         self._serial_number = serial_number
         self._access_token = json.loads(access_token)
@@ -50,7 +49,7 @@ class Token:
 class Crons:
     """Dummy cron (device for HA) for Hello World example."""
 
-    def __init__(self, cronid: str, name: str, token: Token) -> None:
+    def __init__(self, cronid: str, name: str, token: token) -> None:
         """Init dummy cron."""
         self._id = cronid
         self.token = token
@@ -132,7 +131,7 @@ class Crons:
                 }
             }
         }
-        requestURL = "http://" + self.token._api_ip_address + ":3000/api/autoSign"
+        requestURL = API_URL + "/autoSign"
         # future = self._loop.run_in_executor(None, requests.post, requestURL, data=json.dumps(requestBody), headers=requestHeaders)
         try:
             response = await self.token._hass.async_add_executor_job(lambda: requests.post(requestURL, data=json.dumps(requestBody), headers=requestHeaders))
