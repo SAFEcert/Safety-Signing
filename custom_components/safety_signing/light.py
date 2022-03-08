@@ -98,6 +98,7 @@ class CronJobRunner(LightEntity):
         self.is_light_on = True
         if self._cron.is_enable == "on":
             await self._cron.running_cron()
+            self.is_light_on = False
 
     async def async_turn_off(self, **kwargs):
         self.is_light_on = False
