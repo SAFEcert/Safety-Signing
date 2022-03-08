@@ -28,11 +28,8 @@ _LOGGER = logging.getLogger(__name__)
 # figure this out or look further into it.
 DATA_SCHEMA = Schema({
     Required("name"): str,
-    Required("token_serial"): str,
-    Required("serial_number"): str,
-    Required("pin"): str,
-    Required("access_token"): str,
-    Required("app"): str
+    Required("json_config"): str,
+    Required("api_ip_address"): str
 })
 
 
@@ -48,31 +45,54 @@ async def validate_input(hass: HomeAssistant, data: dict) -> dict[str, Any]:
     # `async_step_user` method below.
     if len(data["name"]) < 3:
         raise InvalidName
+
+    if len(data["api_ip_address"].split(".")) == 4:
+        for mask in data["api_ip_address"].split("."):
+            if not mask.isnumeric() or mask < 0 or mask > 255:
+                raise InvalidIPAddress
+    else:
+        raise InvalidIPAddress
+
+    try:
+        input_config = json.loads(data["config"])
+        input_config["token_serial"]
+        input_config["serial_number"]
+        input_config["pin"]
+        input_config["access_token"]
+        input_config["app"]
+    except:
+        raise InvalidAccessToken
     
-    if len(data["token_serial"]) < 5 or len(data["serial_number"]) < 5:
+    # Required("token_serial"): str,
+    # Required("serial_number"): str,
+    # Required("pin"): str,
+    # Required("access_token"): str,
+    # Required("app"): str
+    
+    if len(input_config["token_serial"]) < 5 or len(input_config["serial_number"]) < 5:
         raise InvalidSerialNumber
     
-    if len(data["token_serial"]) < 5:
+    if len(input_config["token_serial"]) < 5:
         raise InvalidTokenSerial
 
-    if len(data["pin"]) < 6 or len(data["pin"]) > 9:
+    if len(input_config["pin"]) < 6 or len(input_config["pin"]) > 9:
         raise InvalidPin
 
     try:
-        access_token = json.loads(data["access_token"])
+        access_token = json.loads(input_config["access_token"])
         if access_token["access_token"] and access_token["expires_in"] and access_token["refresh_token"] and access_token["scope"] and access_token["token_type"]:
             """This token is good"""
     except:
         raise InvalidAccessToken
 
-    if len(data["app"]) > 1:
-        app_list = data["app"].split(';')
+    if len(input_config["app"]) > 1:
+        app_list = input_config["app"].split(';')
         for app in app_list:
             if app not in ["XHDO", "BHXH", "THUE", "KHAC"]:
                 raise InvalidApp
 
 
-    token = Token(hass, data["name"], data["token_serial"], data["serial_number"], data["access_token"], data["pin"], data["app"])
+    token = Token(hass, data["name"], data["api_ip_address"], input_config["token_serial"], input_config["serial_number"], input_config["access_token"], input_config["pin"], input_config["app"])
     # The dummy token provides a `test_connection` method to ensure it's working
     # as expected
 
@@ -109,24 +129,26 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 info = await validate_input(self.hass, user_input)
 
                 return self.async_create_entry(title=info["title"], data=user_input)
-            # except CannotConnect:
-            #     errors["base"] = "cannot_connect"
+            except ConnectionError:
+                errors["base"] = "cannot_connect"
             except InvalidName:
                 # The error string is set here, and should be translated.
                 # This example does not currently cover translations, see the
                 # comments on `DATA_SCHEMA` for further details.
                 # Set the error on the `name` field, not the entire form.
                 errors["name"] = "invalid_name"
+            except InvalidConfig:
+                errors["config"] = "invalid_config"
             except InvalidTokenSerial:
-                errors["token_serial"] = "invalid_token_serial"
+                errors["config"] = "invalid_token_serial"
             except InvalidSerialNumber:
-                errors["serial_number"] = "invalid_serial_number"
+                errors["config"] = "invalid_serial_number"
             except InvalidPin:
-                errors["pin"] = "invalid_pin"
+                errors["config"] = "invalid_pin"
             except InvalidAccessToken:
-                errors["access_token"] = "invalid_access_token"
+                errors["config"] = "invalid_access_token"
             except InvalidApp:
-                errors["app"] = "invalid_app"
+                errors["config"] = "invalid_app"
             except Exception:  # pylint: disable=broad-except
                 _LOGGER.exception("Unexpected exception")
                 errors["base"] = "unknown"
@@ -137,7 +159,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         )
 
 
-class CannotConnect(exceptions.HomeAssistantError):
+class ConnectionError(exceptions.HomeAssistantError):
     """Error to indicate we cannot connect."""
 
 
@@ -158,3 +180,9 @@ class InvalidAccessToken(exceptions.HomeAssistantError):
 
 class InvalidApp(exceptions.HomeAssistantError):
     """Error to indicate there is an invalid app."""
+
+class InvalidConfig(exceptions.HomeAssistantError):
+    """Error input json config"""
+
+class InvalidIPAddress(exceptions.HomeAssistantError):
+    """Error input json config"""

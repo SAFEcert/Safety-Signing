@@ -5,6 +5,7 @@
         },
         "error": {
             "cannot_connect": "[%key:common::config_flow::error::cannot_connect%]",
+            "invalid_config": "Config invalid json or missing parameter",
             "invalid_name": "Name must be at least 3 characters",
             "invalid_serial_number": "Invalid min length of serial",
             "invalid_token_serial": "Invalid min length of serial",
@@ -17,8 +18,8 @@
             "user": {
                 "data": {
                     "name": "Name",
-                    "token_serial": "Token serial",
-                    "access_token": "Google access token (JSON)",
+                    "json_config": "JSON config",
+                    "api_ip_address": "Google access token (JSON)",
                     "serial_number": "Serial Number",
                     "pin": "Pin code",
                     "app": "App (XHDO;THUE;BHXH)"
