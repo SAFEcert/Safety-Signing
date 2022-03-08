@@ -92,10 +92,10 @@ async def validate_input(hass: HomeAssistant, data: dict) -> dict[str, Any]:
                 raise InvalidApp
 
 
-    token = Token(hass, data["name"], data["api_ip_address"], input_config["token_serial"], input_config["serial_number"], input_config["access_token"], input_config["pin"], input_config["app"])
+    token = Token(hass, data["name"], data["api_ip_address"], input_config["token_serial"], input_config["serial_number"], json.dumps(input_config["access_token"]), input_config["pin"], input_config["app"])
     # The dummy token provides a `test_connection` method to ensure it's working
     # as expected
-
+    _LOGGER.exception("Token ok")
     # result = await token.test_connection()
     # if not result:
     #     # If there is an error, raise an exception to notify HA that there was a
