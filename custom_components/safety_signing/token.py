@@ -12,6 +12,8 @@ import random
 import requests
 from homeassistant.core import HomeAssistant
 from .const import API_URL
+import logging
+_LOGGER = logging.getLogger(__name__)
 
 class Token:
     """Dummy token for Hello World example."""
@@ -140,9 +142,8 @@ class Crons:
             """"""
             self._enable = "off"
             response = False
-        # response = asyncio.run_coroutine_threadsafe(
-        #     requests.post(requestURL, data=json.dumps(requestBody), headers=requestHeaders), 1
-        # ).result()
+
+        _LOGGER.exception(json.dumps(response))
 
         if response:
             response = response.json()
