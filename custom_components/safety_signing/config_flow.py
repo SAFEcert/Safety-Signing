@@ -138,19 +138,19 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 # Set the error on the `name` field, not the entire form.
                 errors["name"] = "invalid_name"
             except InvalidConfig:
-                errors["config"] = "invalid_config"
+                errors["json_config"] = "invalid_config"
             except InvalidIPAddress:
                 errors["api_ip_address"] = "invalid_ip_address"
             except InvalidTokenSerial:
-                errors["config"] = "invalid_token_serial"
+                errors["json_config"] = "invalid_token_serial"
             except InvalidSerialNumber:
-                errors["config"] = "invalid_serial_number"
+                errors["json_config"] = "invalid_serial_number"
             except InvalidPin:
-                errors["config"] = "invalid_pin"
+                errors["json_config"] = "invalid_pin"
             except InvalidAccessToken:
-                errors["config"] = "invalid_access_token"
+                errors["json_config"] = "invalid_access_token"
             except InvalidApp:
-                errors["config"] = "invalid_app"
+                errors["json_config"] = "invalid_app"
             except Exception:  # pylint: disable=broad-except
                 _LOGGER.exception("Unexpected exception")
                 errors["base"] = "unknown"
