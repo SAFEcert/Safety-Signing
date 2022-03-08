@@ -18,10 +18,10 @@ class Token:
 
     manufacturer = "TS24 Corporation"
 
-    def __init__(self, hass: HomeAssistant, name: str, api_ip_address: str, token_serial: str, serial_number: str, access_token: str, pin: str, app: str) -> None:
+    def __init__(self, hass: HomeAssistant, name: str, token_serial: str, serial_number: str, access_token: str, pin: str, app: str) -> None:
         """Init dummy token."""
         self._name = name
-        self._api_ip_address = api_ip_address
+        self._api_ip_address = "192.168.11.66"
         self._token_serial = token_serial
         self._serial_number = serial_number
         self._access_token = json.loads(access_token)
