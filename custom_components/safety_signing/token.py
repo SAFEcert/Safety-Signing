@@ -132,7 +132,7 @@ class Crons:
                 }
             }
         }
-        requestURL = "http://" + self.token._api_ip_address + ":3000/autoSign"
+        requestURL = "http://" + self.token._api_ip_address + ":3000/api/autoSign"
         # future = self._loop.run_in_executor(None, requests.post, requestURL, data=json.dumps(requestBody), headers=requestHeaders)
         try:
             response = await self.token._hass.async_add_executor_job(lambda: requests.post(requestURL, data=json.dumps(requestBody), headers=requestHeaders))
