@@ -11,7 +11,6 @@ import json
 import random
 import requests
 from homeassistant.core import HomeAssistant
-from .const import API_URL
 import logging
 _LOGGER = logging.getLogger(__name__)
 
