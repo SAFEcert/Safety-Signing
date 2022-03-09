@@ -32,7 +32,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         return True
     
     token = Token(hass, entry.data["name"], entry.data["api_ip_address"], input_config["token_serial"], input_config["serial_number"], input_config["access_token"], input_config["pin"], input_config["app"])
-    token.check_serial_exists()
+    await token.check_serial_exists()
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = token
     _LOGGER.info("Token ok")
 
