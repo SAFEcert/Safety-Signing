@@ -48,8 +48,8 @@ class CronJobRunner(LightEntity):
         # Usual setup is done here. Callbacks are added in async_added_to_hass.
         self._hass = hass
         self._cron = cron
-        self._attr_unique_id = f"{self._cron.cron_id}_button"
-        self._attr_name = f"{self._cron.name}_button"
+        self._attr_unique_id = f"{self._cron.cron_id}_action"
+        self._attr_name = f"{self._cron.name} action"
         self.is_light_on = False
 
     @property
