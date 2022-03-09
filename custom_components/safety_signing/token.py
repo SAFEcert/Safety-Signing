@@ -12,6 +12,7 @@ import random
 import requests
 from homeassistant.core import HomeAssistant
 import logging
+from .const import API_KEY
 _LOGGER = logging.getLogger(__name__)
 
 class Token:
@@ -31,11 +32,44 @@ class Token:
         self._hass = hass
         self._id = name.replace(" ", "_").lower()
         self._installed = False
-
+        self._is_valid_token = False
         self.crons = [
             Crons(f"{self._id}_"+serial_number, f"Serial {serial_number} {app.replace(';', ',')}", self),
         ]
         self.online = True
+
+    async def check_serial_exists(self):
+        requestHeaders = {
+            "Content-Type": "application/json",
+        }
+        requestBody = {
+            "pin": self._pin,
+            "api_key": API_KEY,
+            "token_serial": self._token_serial
+        }
+        requestURL = "http://" + self._api_ip_address + ":3000/api/token/getInfo"
+        # future = self._loop.run_in_executor(None, requests.post, requestURL, data=json.dumps(requestBody), headers=requestHeaders)
+        try:
+            response = await self._hass.async_add_executor_job(lambda: requests.post(requestURL, data=json.dumps(requestBody), headers=requestHeaders))
+            response = response.json()
+        except:
+            """"""
+            response = {
+                "status":1,
+                "message":"Could not connect to API or timeout"
+            }
+
+        if response:
+            if "status" not in response or response["status"] != 0:
+                _LOGGER.exception(response["message"])
+                self._enable = "off"
+            elif "data" in response and "certs" in response["data"]:
+                for signature in response["data"]["certs"]:
+                    if "SerialNumber" in signature and signature["SerialNumber"] == self._serial_number:
+                        self._is_valid_token = True
+        
+        return self._is_valid_token
+            
 
     @property
     def token_id(self) -> str:
@@ -119,37 +153,39 @@ class Crons:
         self._loop.create_task(self.delayed_update())
 
     async def running_cron(self) -> None:
-        requestHeaders = {
-            "Content-Type": "application/json",
-        }
-        requestBody = {
-            "google_token": self.access_token,
-            "config": {
-                "token": {
-                    "tokenSerial": self.token_serial,
-                    "serialNumber": self.serial_number,
-                    "pin": self.pin,
-                    "app": json.dumps(self.app.split(';'))
+        if self.token._is_valid_token:
+            requestHeaders = {
+                "Content-Type": "application/json",
+            }
+            requestBody = {
+                "google_token": self.access_token,
+                "config": {
+                    "token": {
+                        "tokenSerial": self.token_serial,
+                        "serialNumber": self.serial_number,
+                        "pin": self.pin,
+                        "app": json.dumps(self.app.split(';'))
+                    }
                 }
             }
-        }
-        requestURL = "http://" + self.token._api_ip_address + ":3000/api/autoSign"
-        # future = self._loop.run_in_executor(None, requests.post, requestURL, data=json.dumps(requestBody), headers=requestHeaders)
-        try:
-            response = await self.token._hass.async_add_executor_job(lambda: requests.post(requestURL, data=json.dumps(requestBody), headers=requestHeaders))
-        except:
-            """"""
+            requestURL = "http://" + self.token._api_ip_address + ":3000/api/autoSign"
+            # future = self._loop.run_in_executor(None, requests.post, requestURL, data=json.dumps(requestBody), headers=requestHeaders)
+            try:
+                response = await self.token._hass.async_add_executor_job(lambda: requests.post(requestURL, data=json.dumps(requestBody), headers=requestHeaders))
+                response = response.json()
+            except:
+                """"""
+                response = {
+                    "status": 1,
+                    "message":"Could not connect to API or timeout"
+                }
+
+            if response:
+                if "status" not in response or response["status"] != 0:
+                    self._enable = "off"
+                    _LOGGER.exception(response["message"])
+        else:
             self._enable = "off"
-            response = False
-
-        _LOGGER.exception(json.dumps(response))
-
-        if response:
-            response = response.json()
-            if "status" not in response or response["status"] != 0:
-                self._enable = "off"
-            else:
-                self._enable = "on"
 
     async def turn_on_cron(self) -> None:
         self._enable = "on"

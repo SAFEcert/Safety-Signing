@@ -93,9 +93,15 @@ async def validate_input(hass: HomeAssistant, data: dict) -> dict[str, Any]:
 
 
     token = Token(hass, data["name"], data["api_ip_address"], input_config["token_serial"], input_config["serial_number"], json.dumps(input_config["access_token"]), input_config["pin"], input_config["app"])
+    
+    is_valid = await token.check_serial_exists()
+    if is_valid:
+        _LOGGER.info("Token validated")
+    else:
+        raise SerialNotAvailable
+
     # The dummy token provides a `test_connection` method to ensure it's working
     # as expected
-    _LOGGER.exception("Token ok")
     # result = await token.test_connection()
     # if not result:
     #     # If there is an error, raise an exception to notify HA that there was a
@@ -145,6 +151,8 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 errors["json_config"] = "invalid_token_serial"
             except InvalidSerialNumber:
                 errors["json_config"] = "invalid_serial_number"
+            except SerialNotAvailable:
+                errors["json_config"] = "serial_not_available"
             except InvalidPin:
                 errors["json_config"] = "invalid_pin"
             except InvalidAccessToken:
@@ -160,6 +168,8 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             step_id="user", data_schema=DATA_SCHEMA, errors=errors
         )
 
+class SerialNotAvailable(exceptions.HomeAssistantError):
+    """Failed to find serial & token in api"""
 
 class ConnectionError(exceptions.HomeAssistantError):
     """Error to indicate we cannot connect."""

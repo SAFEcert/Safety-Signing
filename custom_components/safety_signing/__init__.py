@@ -31,7 +31,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         _LOGGER.exception("Unexpected exception")
         return True
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = Token(hass, entry.data["name"], entry.data["api_ip_address"], input_config["token_serial"], input_config["serial_number"], input_config["access_token"], input_config["pin"], input_config["app"])
-    _LOGGER.exception("Token ok")
+    _LOGGER.info("Token ok")
 
     # hass.data.setdefault(DOMAIN, {})[entry.entry_id] = token.Token(hass, entry.data["name"], entry.data["token_serial"], entry.data["serial_number"], entry.data["access_token"], entry.data["pin"], entry.data["app"]) if entry.entry_id not in hass.data.setdefault(DOMAIN, {}).keys() else False
 

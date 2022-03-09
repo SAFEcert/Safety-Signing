@@ -13,6 +13,7 @@
             "invalid_pin": "Invalid pin length must be > 6 and < 8",
             "invalid_app": "App must be in XHDO,BHXH,THUE,KHAC and and separated by ';'",
             "invalid_ip_address": "Invalid API ip address",
+            "serial_not_available": "Token & serial does not found",
             "unknown": "unknown error"
         },
         "step": {

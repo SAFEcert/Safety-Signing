@@ -3,3 +3,4 @@
 # This is the internal name of the integration, it should also match the directory
 # name for the integration.
 DOMAIN = "safety_signing"
+API_KEY = "123456789000"
