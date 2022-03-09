@@ -153,39 +153,36 @@ class Crons:
         self._loop.create_task(self.delayed_update())
 
     async def running_cron(self) -> None:
-        if self.token._is_valid_token:
-            requestHeaders = {
-                "Content-Type": "application/json",
-            }
-            requestBody = {
-                "google_token": self.access_token,
-                "config": {
-                    "token": {
-                        "tokenSerial": self.token_serial,
-                        "serialNumber": self.serial_number,
-                        "pin": self.pin,
-                        "app": json.dumps(self.app.split(';'))
-                    }
+        requestHeaders = {
+            "Content-Type": "application/json",
+        }
+        requestBody = {
+            "google_token": self.access_token,
+            "config": {
+                "token": {
+                    "tokenSerial": self.token_serial,
+                    "serialNumber": self.serial_number,
+                    "pin": self.pin,
+                    "app": json.dumps(self.app.split(';'))
                 }
             }
-            requestURL = "http://" + self.token._api_ip_address + ":3000/api/autoSign"
-            # future = self._loop.run_in_executor(None, requests.post, requestURL, data=json.dumps(requestBody), headers=requestHeaders)
-            try:
-                response = await self.token._hass.async_add_executor_job(lambda: requests.post(requestURL, data=json.dumps(requestBody), headers=requestHeaders))
-                response = response.json()
-            except:
-                """"""
-                response = {
-                    "status": 1,
-                    "message":"Could not connect to API or timeout"
-                }
+        }
+        requestURL = "http://" + self.token._api_ip_address + ":3000/api/autoSign"
+        # future = self._loop.run_in_executor(None, requests.post, requestURL, data=json.dumps(requestBody), headers=requestHeaders)
+        try:
+            response = await self.token._hass.async_add_executor_job(lambda: requests.post(requestURL, data=json.dumps(requestBody), headers=requestHeaders))
+            response = response.json()
+        except:
+            """"""
+            response = {
+                "status": 1,
+                "message":"Could not connect to API or timeout"
+            }
 
-            if response:
-                if "status" not in response or response["status"] != 0:
-                    self._enable = "off"
-                    _LOGGER.exception(response["message"])
-        else:
-            self._enable = "off"
+        if response:
+            if "status" not in response or response["status"] != 0:
+                self._enable = "off"
+                _LOGGER.exception(response["message"])
 
     async def turn_on_cron(self) -> None:
         self._enable = "on"
