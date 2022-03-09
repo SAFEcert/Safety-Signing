@@ -33,8 +33,10 @@ class Token:
         self._id = name.replace(" ", "_").lower()
         self._installed = False
         self._is_valid_token = False
+        cron_id = f"{self._id}_"+serial_number
+        cron_name = "Cron ****" + serial_number[-7:] + api_ip_address + " App:" + app.replace(';', ',')
         self.crons = [
-            Crons(f"{self._id}_"+serial_number, f"Serial {serial_number} {app.replace(';', ',')}", self),
+            Crons(cron_id, cron_name, self),
         ]
         self.online = True
 
