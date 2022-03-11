@@ -93,7 +93,7 @@ async def validate_input(hass: HomeAssistant, data: dict) -> dict[str, Any]:
                 raise InvalidApp
 
 
-    token = Token(hass, data["name"], data["api_ip_address"], input_config["token_serial"], input_config["serial_number"], json.dumps(input_config["access_token"]), input_config["pin"], input_config["app"])
+    token = Token(hass, data["name"], data["api_ip_address"], data["pdf_options"], input_config["token_serial"], input_config["serial_number"], json.dumps(input_config["access_token"]), input_config["pin"], input_config["app"])
     
     is_valid = await token.check_serial_exists()
     if is_valid:
