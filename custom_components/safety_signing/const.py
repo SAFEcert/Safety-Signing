@@ -4,3 +4,4 @@
 # name for the integration.
 DOMAIN = "safety_signing"
 API_KEY = "123456789000"
+ICON_LIGHT = "mdi:camera-timer"

@@ -2,10 +2,10 @@
 from __future__ import annotations
 import json
 import logging
-from typing import Any
+from typing import Any, Optional
 
 import voluptuous as vol
-from voluptuous import Schema, Required
+from voluptuous import Schema, Required, Optional
 
 from homeassistant import config_entries, exceptions
 from homeassistant.core import HomeAssistant
@@ -29,6 +29,7 @@ _LOGGER = logging.getLogger(__name__)
 DATA_SCHEMA = Schema({
     Required("name"): str,
     Required("json_config"): str,
+    Optional("pdf_options"): str,
     Required("api_ip_address"): str
 })
 

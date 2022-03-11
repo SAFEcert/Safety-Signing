@@ -18,15 +18,18 @@ _LOGGER = logging.getLogger(__name__)
 class Token:
     """Dummy token for Hello World example."""
 
-    manufacturer = "TS24 Corporation"
+    manufacturer = "SAFEcert Corp"
 
-    def __init__(self, hass: HomeAssistant, name: str, api_ip_address: str, token_serial: str, serial_number: str, access_token: str, pin: str, app: str) -> None:
+    def __init__(self, hass: HomeAssistant, name: str, api_ip_address: str, pdf_options: str, token_serial: str, serial_number: str, access_token: str, pin: str, app: str) -> None:
         """Init dummy token."""
+        serial_number = serial_number.upper()
+        token_serial = token_serial.upper()
         self._name = name
         self._api_ip_address = api_ip_address
-        self._token_serial = token_serial.upper()
-        self._serial_number = serial_number.upper()
+        self._token_serial = token_serial
+        self._serial_number = serial_number
         self._access_token = json.loads(access_token)
+        self._pdf_options = json.loads(pdf_options)
         self._pin = pin
         self._app = app
         self._hass = hass

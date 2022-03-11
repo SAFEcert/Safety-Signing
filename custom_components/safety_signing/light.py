@@ -19,7 +19,7 @@ from homeassistant.components.light import LightEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from .const import DOMAIN
+from .const import DOMAIN, ICON_LIGHT
 
 
 # This function is called as part of the __init__.async_setup_entry (via the
@@ -91,7 +91,7 @@ class CronJobRunner(LightEntity):
     @property
     def icon(self) -> str:
         """Icon of the entity."""
-        return "mdi:skip-next-circle"
+        return ICON_LIGHT
 
     async def async_turn_on(self, **kwargs):
         """Turn device on."""
