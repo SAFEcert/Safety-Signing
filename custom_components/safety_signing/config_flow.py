@@ -29,7 +29,6 @@ _LOGGER = logging.getLogger(__name__)
 DATA_SCHEMA = Schema({
     Required("name"): str,
     Required("json_config"): str,
-    Optional("pdf_options"): str,
     Required("api_ip_address"): str
 })
 
@@ -61,6 +60,11 @@ async def validate_input(hass: HomeAssistant, data: dict) -> dict[str, Any]:
         input_config["pin"]
         input_config["access_token"]
         input_config["app"]
+        input_config["pdf_options"]
+        input_config["tax_ids"]
+        pdf_options = ""
+        if "pdf_options" in input_config and len(input_config["pdf_options"]) >= 1:
+            pdf_options = json.dumps(input_config["pdf_options"])
     except:
         raise InvalidAccessToken
     
@@ -69,7 +73,7 @@ async def validate_input(hass: HomeAssistant, data: dict) -> dict[str, Any]:
     # Required("pin"): str,
     # Required("access_token"): str,
     # Required("app"): str
-    
+
     if len(input_config["token_serial"]) < 5 or len(input_config["serial_number"]) < 5:
         raise InvalidSerialNumber
     
@@ -92,8 +96,17 @@ async def validate_input(hass: HomeAssistant, data: dict) -> dict[str, Any]:
             if app not in ["XHDO", "BHXH", "THUE", "KHAC"]:
                 raise InvalidApp
 
+    tax_ids = []
+    if len(input_config["tax_ids"]) >= 1:
+        for tax_id in input_config["tax_ids"]:
+            if tax_id.replace("-", "").isnumeric() and len(tax_id.replace("-", "")) >= 10 and len(tax_id.replace("-", "")) <= 16:
+                tax_ids.append(tax_id.replace("-", ""))
+    
+    if not tax_ids or len(tax_ids) == 0:
+        raise InvalidTaxList
 
-    token = Token(hass, data["name"], data["api_ip_address"], data["pdf_options"], input_config["token_serial"], input_config["serial_number"], json.dumps(input_config["access_token"]), input_config["pin"], input_config["app"])
+
+    token = Token(hass, data["name"], data["api_ip_address"], pdf_options, json.dumps(tax_ids), input_config["token_serial"], input_config["serial_number"], json.dumps(input_config["access_token"]), input_config["pin"], input_config["app"])
     
     is_valid = await token.check_serial_exists()
     if is_valid:
@@ -160,6 +173,8 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 errors["json_config"] = "invalid_access_token"
             except InvalidApp:
                 errors["json_config"] = "invalid_app"
+            except InvalidTaxList:
+                errors["json_config"] = "invalid_tax_ids"
             except Exception:  # pylint: disable=broad-except
                 _LOGGER.exception("Unexpected exception")
                 errors["base"] = "unknown"
@@ -199,3 +214,6 @@ class InvalidConfig(exceptions.HomeAssistantError):
 
 class InvalidIPAddress(exceptions.HomeAssistantError):
     """Error input json config"""
+
+class InvalidTaxList(exceptions.HomeAssistantError):
+    """Invalid tax list"""

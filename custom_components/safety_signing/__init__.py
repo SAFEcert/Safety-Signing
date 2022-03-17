@@ -26,12 +26,22 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         input_config["pin"]
         input_config["access_token"] = json.dumps(input_config["access_token"])
         input_config["app"]
+        input_config["tax_ids"]
+        pdf_options = ""
+        if "pdf_options" in input_config and len(input_config["pdf_options"]) >= 1:
+            pdf_options = json.dumps(input_config["pdf_options"])
     except:
         """Input config error"""
         _LOGGER.exception("Unexpected exception")
         return True
+
+    tax_ids = []
+    if len(input_config["tax_ids"]) >= 1:
+        for tax_id in input_config["tax_ids"]:
+            if tax_id.replace("-", "").isnumeric() and len(tax_id.replace("-", "")) >= 10 and len(tax_id.replace("-", "")) <= 16:
+                tax_ids.append(tax_id.replace("-", ""))
     
-    token = Token(hass, entry.data["name"], entry.data["api_ip_address"], entry.data["pdf_options"], input_config["token_serial"], input_config["serial_number"], input_config["access_token"], input_config["pin"], input_config["app"])
+    token = Token(hass, entry.data["name"], entry.data["api_ip_address"], pdf_options, tax_ids, input_config["token_serial"], input_config["serial_number"], input_config["access_token"], input_config["pin"], input_config["app"])
     await token.check_serial_exists()
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = token
     _LOGGER.info("Token ok")

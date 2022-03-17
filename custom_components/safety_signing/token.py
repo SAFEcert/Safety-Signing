@@ -20,7 +20,7 @@ class Token:
 
     manufacturer = "SAFEcert Corp"
 
-    def __init__(self, hass: HomeAssistant, name: str, api_ip_address: str, pdf_options: str, token_serial: str, serial_number: str, access_token: str, pin: str, app: str) -> None:
+    def __init__(self, hass: HomeAssistant, name: str, api_ip_address: str, pdf_options: str, tax_ids: str, token_serial: str, serial_number: str, access_token: str, pin: str, app: str) -> None:
         """Init dummy token."""
         serial_number = serial_number.upper()
         token_serial = token_serial.upper()
@@ -30,6 +30,7 @@ class Token:
         self._serial_number = serial_number
         self._access_token = json.loads(access_token)
         self._pdf_options = json.loads(pdf_options)
+        self._tax_ids = json.loads(tax_ids)
         self._pin = pin
         self._app = app
         self._hass = hass
@@ -100,6 +101,7 @@ class Crons:
         self.access_token = token._access_token
         self.pin = token._pin
         self.app = token._app
+        self.tax_ids = token._tax_ids
         self._callbacks = set()
         self._loop = asyncio.get_event_loop()
         self._target_position = 100
@@ -165,6 +167,7 @@ class Crons:
             "google_token": self.access_token,
             "config": {
                 "token": {
+                    "tax_ids": self.tax_ids,
                     "tokenSerial": self.token_serial,
                     "serialNumber": self.serial_number,
                     "pin": self.pin,
@@ -172,6 +175,14 @@ class Crons:
                 }
             }
         }
+        if self.token._pdf_options and len(self.token._pdf_options) >= 1:
+            try:
+                pdf_options = json.loads(self.token._pdf_options)
+                if pdf_options["y"] in ["top", "bottom"] and pdf_options["x"] in ["left", "right"] and pdf_options["page"] and pdf_options["opacity"] and pdf_options["placement"] and pdf_options["image"]["content"]:
+                    requestBody["config"]["pdf_options"] = pdf_options
+            except:
+                """over exception"""
+
         requestURL = "http://" + self.token._api_ip_address + ":3000/api/autoSign"
         # future = self._loop.run_in_executor(None, requests.post, requestURL, data=json.dumps(requestBody), headers=requestHeaders)
         try:

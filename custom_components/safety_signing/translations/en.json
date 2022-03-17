@@ -14,6 +14,7 @@
             "invalid_app": "App must be in XHDO,BHXH,THUE,KHAC and and separated by ';'",
             "invalid_ip_address": "Invalid API ip address",
             "serial_not_available": "Token & serial does not found",
+            "invalid_tax_ids": "Invalid tax id",
             "unknown": "unknown error"
         },
         "step": {
@@ -22,6 +23,7 @@
                     "name": "Name",
                     "json_config": "JSON config",
                     "api_ip_address": "API ip address",
+                    "pdf_options": "JSON PDF options",
                     "serial_number": "Serial Number",
                     "pin": "Pin code",
                     "app": "App (XHDO;THUE;BHXH)"
