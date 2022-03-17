@@ -197,7 +197,6 @@ class Crons:
 
         if response:
             if "status" not in response or response["status"] != 0:
-                self._enable = "off"
                 _LOGGER.exception(response["message"])
 
     async def turn_on_cron(self) -> None:
