@@ -8,7 +8,7 @@
   "zeroconf": [],
   "homekit": {},
   "dependencies": [],
-  "codeowners": ["@mynamezxc"],
+  "codeowners": ["@SAFEcert"],
   "iot_class": "local_polling",
   "version": "0.0.1"
 }
