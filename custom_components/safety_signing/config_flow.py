@@ -46,12 +46,14 @@ async def validate_input(hass: HomeAssistant, data: dict) -> dict[str, Any]:
     if len(data["name"]) < 3:
         raise InvalidName
 
-    if len(data["api_ip_address"].split(".")) == 4:
-        for mask in data["api_ip_address"].split("."):
-            if not mask.isnumeric() or (mask.isnumeric() and (int(mask) < 0 or int(mask) > 255)):
-                raise InvalidIPAddress
-    else:
-        raise InvalidIPAddress
+    # if len(data["api_ip_address"].split(".")) == 4:
+    #     for mask in data["api_ip_address"].split("."):
+    #         if int(mask) != 0 and not mask.isnumeric() or (mask.isnumeric() and (int(mask) < 0 or int(mask) > 255)):
+    #             raise InvalidIPAddress
+    # else:
+    #     raise InvalidIPAddress
+    # Update tự động direct IP
+    # data["api_ip_address"] = "127.0.0.1"
 
     try:
         input_config = json.loads(data["json_config"])
@@ -93,7 +95,7 @@ async def validate_input(hass: HomeAssistant, data: dict) -> dict[str, Any]:
     if len(input_config["app"]) >= 1:
         app_list = input_config["app"].split(';')
         for app in app_list:
-            if app not in ["XHDO", "BHXH", "THUE", "KHAC"]:
+            if app not in ["XHDO", "BHXH", "THUE", "HSKHAC"]:
                 raise InvalidApp
 
     tax_ids = []

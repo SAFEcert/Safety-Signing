@@ -11,7 +11,7 @@
             "invalid_token_serial": "Invalid min length of serial",
             "invalid_access_token": "Invalid access token must be json object",
             "invalid_pin": "Invalid pin length must be > 6 and < 8",
-            "invalid_app": "App must be in XHDO,BHXH,THUE,KHAC and and separated by ';'",
+            "invalid_app": "App must be in XHDO,BHXH,THUE,HSKHAC and and separated by ';'",
             "invalid_ip_address": "Invalid API ip address",
             "serial_not_available": "Token & serial does not found",
             "invalid_tax_ids": "Invalid tax id",
@@ -26,7 +26,7 @@
                     "pdf_options": "JSON PDF options",
                     "serial_number": "Serial Number",
                     "pin": "Pin code",
-                    "app": "App (XHDO;THUE;BHXH)"
+                    "app": "App (XHDO;THUE;BHXH;HSKHAC)"
                 }
             }
         }
