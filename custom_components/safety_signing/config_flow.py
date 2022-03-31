@@ -29,7 +29,7 @@ _LOGGER = logging.getLogger(__name__)
 DATA_SCHEMA = Schema({
     Required("name"): str,
     Required("json_config"): str,
-    Required("api_ip_address"): str
+    # Required("api_ip_address"): str
 })
 
 
@@ -52,8 +52,9 @@ async def validate_input(hass: HomeAssistant, data: dict) -> dict[str, Any]:
     #             raise InvalidIPAddress
     # else:
     #     raise InvalidIPAddress
-    # Update tự động direct IP
-    # data["api_ip_address"] = "127.0.0.1"
+
+    # Bỏ API IP address lấy tự động local IP
+    data["api_ip_address"] = "127.0.0.1"
 
     try:
         input_config = json.loads(data["json_config"])
