@@ -54,7 +54,7 @@ async def validate_input(hass: HomeAssistant, data: dict) -> dict[str, Any]:
     #     raise InvalidIPAddress
 
     # Bỏ API IP address lấy tự động local IP
-    data["api_ip_address"] = "127.0.0.1"
+    data["api_ip_address"] = "192.168.11.66"
 
     try:
         input_config = json.loads(data["json_config"])
