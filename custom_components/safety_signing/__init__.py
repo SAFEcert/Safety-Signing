@@ -19,6 +19,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Hello World from a config entry."""
     # Store an instance of the "connecting" class that does the work of speaking
     # with your actual devices.
+    api_ip_address = "192.168.11.66"
     try:
         input_config = json.loads(entry.data["json_config"])
         input_config["token_serial"]
@@ -41,7 +42,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             if tax_id.replace("-", "").isnumeric() and len(tax_id.replace("-", "")) >= 10 and len(tax_id.replace("-", "")) <= 16:
                 tax_ids.append(tax_id.replace("-", ""))
     
-    token = Token(hass, entry.data["name"], entry.data["api_ip_address"], pdf_options, json.dumps(tax_ids), input_config["token_serial"], input_config["serial_number"], input_config["access_token"], input_config["pin"], input_config["app"])
+    token = Token(hass, entry.data["name"], api_ip_address, pdf_options, json.dumps(tax_ids), input_config["token_serial"], input_config["serial_number"], input_config["access_token"], input_config["pin"], input_config["app"])
     await token.check_serial_exists()
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = token
     _LOGGER.info("Token ok")
