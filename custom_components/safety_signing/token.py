@@ -12,7 +12,7 @@ import random
 import requests
 from homeassistant.core import HomeAssistant
 import logging
-from .const import API_KEY
+from .const import API_KEY, API_IP
 _LOGGER = logging.getLogger(__name__)
 
 class Token:

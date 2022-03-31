@@ -5,3 +5,4 @@
 DOMAIN = "safety_signing"
 API_KEY = "123456789000"
 ICON_LIGHT = "mdi:camera-timer"
+API_IP = "127.0.0.1"

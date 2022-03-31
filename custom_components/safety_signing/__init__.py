@@ -6,7 +6,7 @@ from homeassistant.core import HomeAssistant
 import json
 import logging
 from .token import Token
-from .const import DOMAIN
+from .const import DOMAIN, API_IP
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -19,7 +19,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Hello World from a config entry."""
     # Store an instance of the "connecting" class that does the work of speaking
     # with your actual devices.
-    api_ip_address = "192.168.11.66"
+    api_ip_address = API_IP
     try:
         input_config = json.loads(entry.data["json_config"])
         input_config["token_serial"]

@@ -10,7 +10,7 @@ from voluptuous import Schema, Required, Optional
 from homeassistant import config_entries, exceptions
 from homeassistant.core import HomeAssistant
 
-from .const import DOMAIN  # pylint:disable=unused-import
+from .const import DOMAIN, API_IP  # pylint:disable=unused-import
 from .token import Token
 
 _LOGGER = logging.getLogger(__name__)
@@ -54,7 +54,7 @@ async def validate_input(hass: HomeAssistant, data: dict) -> dict[str, Any]:
     #     raise InvalidIPAddress
 
     # Bỏ API IP address lấy tự động local IP
-    data["api_ip_address"] = "192.168.11.66"
+    data["api_ip_address"] = API_IP
 
     try:
         input_config = json.loads(data["json_config"])
