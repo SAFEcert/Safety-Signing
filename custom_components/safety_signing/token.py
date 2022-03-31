@@ -38,7 +38,7 @@ class Token:
         self._installed = False
         self._is_valid_token = False
         cron_id = f"{self._id}_"+serial_number
-        cron_name = "Cron ****" + serial_number[-7:] + " API:" + api_ip_address + " App:" + app.replace(';', ',')
+        cron_name = "Token ****" + serial_number[-7:] + " App:" + app.replace(';', ',')
         self.crons = [
             Crons(cron_id, cron_name, self),
         ]

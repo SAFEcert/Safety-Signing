@@ -88,7 +88,7 @@ class BatterySensor(SensorBase):
         # by using the device ID, and appending "_battery"
         self._attr_unique_id = f"{self._cron.cron_id}_sensor"
         # The name of the entity
-        self._attr_name = f"{self._cron.name} sensor"
+        self._attr_name = f"Token sensor"
         
 
     @property
