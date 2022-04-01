@@ -177,7 +177,7 @@ class Crons:
         }
         if self.token._pdf_options and len(self.token._pdf_options) >= 1:
             try:
-                pdf_options = json.loads(self.token._pdf_options)
+                pdf_options = self.token._pdf_options
                 requestBody["config"]["pdf_options"] = pdf_options
                 if pdf_options["y"] in ["top", "bottom"] and pdf_options["x"] in ["left", "right", "center"] and pdf_options["page"] in ["first", "last"] and pdf_options["opacity"] and pdf_options["placement"] and pdf_options["image"]["content"]:
                     # requestBody["config"]["pdf_options"] = pdf_options
