@@ -96,7 +96,7 @@ async def validate_input(hass: HomeAssistant, data: dict) -> dict[str, Any]:
     if len(input_config["app"]) >= 1:
         app_list = input_config["app"].split(';')
         for app in app_list:
-            if app not in ["XHDO", "BHXH", "THUE", "HSKHAC"]:
+            if app not in ["XHDO", "BHXH", "THUE", "HSKHAC", "HDLD", "HDKT"]:
                 raise InvalidApp
 
     tax_ids = []
